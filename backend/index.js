@@ -6,8 +6,8 @@ const bodyParser = require('body-parser')
 
 
 const mongoose = require('mongoose')
-mongoose.connect("mongodb://localhost:27017/mydb",{ useNewUrlParser: true, useUnifiedTopology: true })
-//mongodb+srv;//logantenchy:ns4rJEwUYvKIKhLK@cluster0.bnwcg0e.mongodb.net/teste
+//mongoose.connect("mongodb://localhost:27017/mydb",{ useNewUrlParser: true, useUnifiedTopology: true })
+mongodb+srv;//logantenchy:ns4rJEwUYvKIKhLK@cluster0.bnwcg0e.mongodb.net/teste
 
 //Configurar middlewares e roteadores
 app.use(express.json());
