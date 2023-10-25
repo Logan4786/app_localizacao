@@ -1,6 +1,7 @@
 const express = require('express');
-const User = require('../models/veiculos.model')
+const db = require('../models/veiculos.model')
 const router = express.Router();
+require("dotenv").config();
 
 router.get("/veiculo/:placa", async (req, res) => {
     const placa = req.params.placa;
@@ -53,6 +54,7 @@ router.post("/veiculo", async (req, res) => {
             res.status(500).json({ "error": "Erro ao cadastrar veículo" });
         });
     }
+
 });
 
 router.put("/veiculo", async (req, res) => {
@@ -78,5 +80,42 @@ router.put("/veiculo", async (req, res) => {
     }
 });
 
+router.delete("/veiculo/:placa", async (req, res) => {
+    const placa = req.params.placa;
+    const userId = req.user.id; // Suponhamos que o ID do usuário esteja no objeto req.user após a autenticação.
+
+    if (placa) {
+        // Procura se a placa está no sistema
+        db.promise()
+            .execute("SELECT cod_carro FROM veiculos WHERE BINARY placa = ? AND user_id = ?;", [
+                placa,
+                userId
+            ])
+            .then(([rows]) => {
+                if (rows[0]) {
+                    db.promise()
+                        .execute("DELETE FROM veiculos WHERE BINARY placa = ? AND user_id = ?;", [
+                            placa,
+                            userId
+                        ])
+                        .then(() => {
+                            res.status(200).json({ "message": "Veículo deletado com sucesso" });
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                            res.status(500).json({ "error": "Erro ao deletar veículo" });
+                        });
+                } else {
+                    res.status(404).json({ "error": "Placa não encontrada no sistema" });
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(500).json({ "error": "Erro ao deletar veículo" });
+            });
+    } else {
+        res.status(422).json({ "error": "Dados insuficientes" });
+    }
+});
 
 module.exports = router;
