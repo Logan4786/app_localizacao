@@ -28,4 +28,55 @@ router.get("/veiculo/:placa", async (req, res) => {
     }
 });
 
+router.post("/veiculo", async (req, res) => {
+    const { numContrato, placa, chassi, renavam, carteira, veiculo, corVeiculo, dataEntrada, ajuizamento } = req.body;
+    const userId = req.user.id; // Suponhamos que o ID do usuário esteja no objeto req.user após a autenticação.
+
+    db.promise()
+        .execute("INSERT INTO veiculos (num_contrato, placa, chassi, renavam, carteira, veiculo, cor_veiculo, dt_entrada, ajuizamento, user_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", [
+            numContrato,
+            placa,
+            chassi,
+            renavam,
+            carteira,
+            veiculo,
+            corVeiculo,
+            dataEntrada,
+            ajuizamento,
+            userId
+        ])
+        .then(() => {
+            res.status(200).json({ "message": "Veículo cadastrado com sucesso" });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json({ "error": "Erro ao cadastrar veículo" });
+        });
+    }
+});
+
+router.put("/veiculo", async (req, res) => {
+    const { placa, ajuizamento } = req.body;
+    const userId = req.user.id; // Suponhamos que o ID do usuário esteja no objeto req.user após a autenticação.
+
+    if (placa && ajuizamento) {
+        db.promise()
+            .execute("UPDATE veiculos SET ajuizamento = ? WHERE placa = ? AND user_id = ?;", [
+                ajuizamento,
+                placa,
+                userId
+            ])
+            .then(() => {
+                res.status(200).json({ "message": "Ajuizamento atualizado com sucesso" });
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(500).json({ "error": "Falha ao atualizar ajuizamento" });
+            });
+    } else {
+        res.status(422).json({ "error": "Dados insuficientes" });
+    }
+});
+
+
 module.exports = router;
