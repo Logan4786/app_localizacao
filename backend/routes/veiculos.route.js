@@ -1,7 +1,7 @@
 const express = require('express');
 const db = require('../models/veiculos.model')
 const router = express.Router();
-require("dotenv").config();
+
 
 router.get("/veiculo/:placa", async (req, res) => {
     const placa = req.params.placa;
