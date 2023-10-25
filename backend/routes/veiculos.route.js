@@ -55,7 +55,7 @@ router.post("/veiculo", async (req, res) => {
         });
     }
 
-});
+);
 
 router.put("/veiculo", async (req, res) => {
     const { placa, ajuizamento } = req.body;
