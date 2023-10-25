@@ -73,10 +73,4 @@ router.get("/veiculo/:placa", async (req, res) => {
     }
 });
 
-
-
-
-
-
-
 module.exports = router
