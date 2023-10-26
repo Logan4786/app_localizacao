@@ -1,5 +1,5 @@
 const express = require('express');
-const db = require('../models/veiculos.model')
+const Veiculo = require('../models/veiculos.model')
 const router = express.Router();
 
 
@@ -8,7 +8,7 @@ router.get("/veiculo/:placa", async (req, res) => {
     const userId = req.user.id; // Suponhamos que o ID do usuário esteja no objeto req.user após a autenticação.
 
     if (placa.length < 9 && placa.length > 5) {
-        db.promise()
+        Veiculo.promise()
             .execute("SELECT placa, ajuizamento FROM veiculos WHERE placa = ? AND user_id = ?;", [
                 placa,
                 userId
@@ -33,7 +33,7 @@ router.post("/veiculo", async (req, res) => {
     const { numContrato, placa, chassi, renavam, carteira, veiculo, corVeiculo, dataEntrada, ajuizamento } = req.body;
     const userId = req.user.id; // Suponhamos que o ID do usuário esteja no objeto req.user após a autenticação.
 
-    db.promise()
+    Veiculo.promise()
         .execute("INSERT INTO veiculos (num_contrato, placa, chassi, renavam, carteira, veiculo, cor_veiculo, dt_entrada, ajuizamento, user_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", [
             numContrato,
             placa,
@@ -62,7 +62,7 @@ router.put("/veiculo", async (req, res) => {
     const userId = req.user.id; // Suponhamos que o ID do usuário esteja no objeto req.user após a autenticação.
 
     if (placa && ajuizamento) {
-        db.promise()
+        Veiculo.promise()
             .execute("UPDATE veiculos SET ajuizamento = ? WHERE placa = ? AND user_id = ?;", [
                 ajuizamento,
                 placa,
@@ -86,7 +86,7 @@ router.delete("/veiculo/:placa", async (req, res) => {
 
     if (placa) {
         // Procura se a placa está no sistema
-        db.promise()
+        Veiculo.promise()
             .execute("SELECT cod_carro FROM veiculos WHERE BINARY placa = ? AND user_id = ?;", [
                 placa,
                 userId
